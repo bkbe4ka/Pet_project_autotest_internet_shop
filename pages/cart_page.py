@@ -17,11 +17,13 @@ class Cart_final_page(Base):
 
     #Locators
 
-
+    cart = "//div[@class='checkout_m1 checkout_m2']"
 
     #Return button
 
-
+    def return_text(self):
+        words = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.cart)))
+        return words.text
 
 
     """Methods"""
@@ -30,6 +32,6 @@ class Cart_final_page(Base):
         self.get_current_url()
         time.sleep(3)
         self.assert_url('https://www.ozon.ru/cart')
-        self.assert_word("Корзина", "//div[@class='checkout_m1 checkout_m2']")
+        self.assert_word("Корзина", self.return_text())
 
 

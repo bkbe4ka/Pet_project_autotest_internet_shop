@@ -27,6 +27,6 @@ class Base():
     def assert_word(self, word, xpath_word):
         self.word = word
         self.xpath_word = xpath_word
-        assert xpath_word.text == word
+        assert xpath_word == word
         print("Correct word")
 

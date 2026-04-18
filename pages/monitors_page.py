@@ -17,7 +17,7 @@ class Monitor_filter_page(Base):
 
     #Locators
 
-    radio_button = "//div[@class='b6w_7'][3]"
+    radio_button = "//div[@class='x1b_7'][5]"
     original_brand = "//span[contains(text(), 'Оригинальный товар')]"
     hdmi_button = "//span[contains(text(), 'HDMI')]"
     game_button = "//span[contains(text(), 'Для игр')]"
@@ -25,7 +25,7 @@ class Monitor_filter_page(Base):
     menu = "//*[@id='layoutPage']/div[1]/div/div/div/div[2]/div[2]/div[1]/div/div/div/div/div/div[1]/input"
     rating = "//span[contains(text(), 'С высоким рейтингом')]"
     cart = "//a[@href='/cart']"
-    product = "//div[@data-index='2']/div/div/div/button[1]"
+    product = "//*[@id='contentScrollPaginator']/div[1]/div/div/div/div[3]/div[1]/div[3]/div/button"
     assert_word = "//div[@class='checkout_m1 checkout_m2']"
 
 
@@ -70,6 +70,7 @@ class Monitor_filter_page(Base):
     #Action
 
     def click_radio(self):
+        self.driver.execute_script("window.scrollTo(0, 400);")
         self.choose_radio().click()
         print("Radio-button click")
 
@@ -94,7 +95,7 @@ class Monitor_filter_page(Base):
         print("Mat click")
 
     def click_menu(self):
-        self.driver.execute_script("window.scrollTo(0, -300);")
+        self.driver.execute_script("window.scrollTo(0, -1200);")
         self.get_menu().click()
         print("Menu click")
 
@@ -103,6 +104,7 @@ class Monitor_filter_page(Base):
         print("High rating click")
 
     def click_product(self):
+        self.driver.execute_script("window.scrollTo(0, 400);")
         self.get_product().click()
         print("Product click")
 
@@ -114,10 +116,10 @@ class Monitor_filter_page(Base):
     """Methods"""
 
     def get_monitor_page(self):
-        self.driver.maximize_window()
         self.get_current_url()
-        time.sleep(3)
+        time.sleep(5)
         self.click_radio()
+        time.sleep(3)
         self.click_original()
         self.click_hdmi()
         self.click_game()
