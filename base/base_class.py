@@ -16,9 +16,17 @@ class Base():
 
 
 
-    """Assert word"""
+    """Assert url"""
 
     def assert_url(self, result):
         get_url = self.driver.current_url
         assert get_url == result
         print("Get correct result")
+
+    """Assert word"""
+    def assert_word(self, word, xpath_word):
+        self.word = word
+        self.xpath_word = xpath_word
+        assert xpath_word.text == word
+        print("Correct word")
+

@@ -27,9 +27,9 @@ class Cart_final_page(Base):
     """Methods"""
 
     def get_final_page(self):
-        self.driver.maximize_window()
         self.get_current_url()
         time.sleep(3)
         self.assert_url('https://www.ozon.ru/cart')
+        self.assert_word("Корзина", "//div[@class='checkout_m1 checkout_m2']")
 
 
