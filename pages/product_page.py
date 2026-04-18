@@ -18,7 +18,7 @@ class Product_page(Base):
     #Locators
 
     cart = "//a[@data-widget='headerIcon']"
-    button_add_to_cart = "//button[@style='background-color: var(--bgActionPrimary); border-radius: 16px;']"
+    button_add_to_cart = "//button[@class='pdp_a1f']"
 
     #Return button
 
