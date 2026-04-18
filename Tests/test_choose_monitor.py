@@ -5,7 +5,7 @@ from selenium import webdriver
 from pages.cart_page import Cart_final_page
 from pages.main_page import Main_page
 from pages.monitors_page import Monitor_filter_page
-
+from pages.product_page import Product_page
 
 
 def test_select_product():
@@ -27,7 +27,12 @@ def test_select_product():
     monitors_page.get_monitor_page()
 
     driver.switch_to.window(driver.window_handles[2])
+    prp = Product_page(driver)
+    prp.get_product_page()
+
+    driver.switch_to.window(driver.window_handles[3])
     cp = Cart_final_page(driver)
     cp.get_final_page()
+
 
     time.sleep(4)

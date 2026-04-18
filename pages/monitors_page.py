@@ -25,7 +25,7 @@ class Monitor_filter_page(Base):
     menu = "//*[@id='layoutPage']/div[1]/div/div/div/div[2]/div[2]/div[1]/div/div/div/div/div/div[1]/input"
     rating = "//span[contains(text(), 'С высоким рейтингом')]"
     cart = "//a[@href='/cart']"
-    product = "//*[@id='contentScrollPaginator']/div[1]/div/div/div/div[3]/div[1]/div[3]/div/button"
+    product = "//span[contains(text(), 'LOBOTi')]"
     assert_word = "//div[@class='checkout_m1 checkout_m2']"
 
 
@@ -108,10 +108,6 @@ class Monitor_filter_page(Base):
         self.get_product().click()
         print("Product click")
 
-    def click_cart(self):
-        self.get_cart().click()
-        print("Cart click")
-
 
     """Methods"""
 
@@ -127,4 +123,3 @@ class Monitor_filter_page(Base):
         self.click_menu()
         self.click_rating()
         self.click_product()
-        self.click_cart()

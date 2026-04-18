@@ -1,6 +1,10 @@
 import datetime
 import os
 
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 class Base():
     def __init__(self, driver):
@@ -30,3 +34,14 @@ class Base():
         assert xpath_word == word
         print("Correct word")
 
+    """Close cookie"""
+
+    def cookies(self):
+        try:
+            cookie_accept_button = WebDriverWait(self.driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'ОК')]"))
+            )
+            cookie_accept_button.click()
+            print("Cookie-баннер закрыт")
+        except:
+            print("Cookie-баннер не появился или уже закрыт")
