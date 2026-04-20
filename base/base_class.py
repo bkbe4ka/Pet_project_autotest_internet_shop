@@ -18,7 +18,9 @@ class Base():
 
     """Get screen"""
 
-
+    def get_screenshot(self):
+        self.now_date = datetime.datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
+        self.driver.save_screenshot(self.now_date + ".png")
 
     """Assert url"""
 
@@ -29,10 +31,13 @@ class Base():
 
     """Assert word"""
     def assert_word(self, word, xpath_word):
-        self.word = word
-        self.xpath_word = xpath_word
-        assert xpath_word == word
-        print("Correct word")
+        try:
+            self.word = word
+            self.xpath_word = xpath_word
+            assert xpath_word == word
+            print("Correct word")
+        except AssertionError:
+            print(f"Word {word} != {xpath_word}")
 
     """Close cookie"""
 

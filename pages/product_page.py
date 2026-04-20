@@ -46,5 +46,6 @@ class Product_page(Base):
         time.sleep(3)
         self.click_button()
         self.click_cart()
+        self.get_screenshot()
 
 
