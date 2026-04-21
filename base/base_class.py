@@ -20,7 +20,7 @@ class Base():
 
     def get_screenshot(self):
         self.now_date = datetime.datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
-        self.driver.save_screenshot(self.now_date + ".png")
+        self.driver.save_screenshot(f"C:\\Users\\Глеб\\PycharmProjects\\Pet_Project for portfolio\\screen\\screenshot_" + self.now_date + ".png")
 
     """Assert url"""
 
