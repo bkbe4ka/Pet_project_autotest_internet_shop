@@ -1,5 +1,6 @@
 import time
 
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,6 +8,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 from base.base_class import Base
+from utilities.logger import Logger
 
 
 class Product_page(Base):
@@ -42,10 +44,13 @@ class Product_page(Base):
     """Methods"""
 
     def get_product_page(self):
-        self.get_current_url()
-        time.sleep(3)
-        self.click_button()
-        self.click_cart()
-        self.get_screenshot()
+        with allure.step("Get product page"):
+            Logger.add_start_step(method="get_product_page")
+            self.get_current_url()
+            time.sleep(3)
+            self.click_button()
+            self.click_cart()
+            self.get_screenshot()
+            Logger.add_end_step(self.driver.current_url, method="get_product_page")
 
 

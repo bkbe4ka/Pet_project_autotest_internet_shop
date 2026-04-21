@@ -1,5 +1,5 @@
 import time
-
+import allure
 from selenium import webdriver
 
 from pages.cart_page import Cart_final_page
@@ -8,6 +8,7 @@ from pages.monitors_page import Monitor_filter_page
 from pages.product_page import Product_page
 
 
+@allure.description("Test select product")
 def test_select_product():
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-blink-features=AutomationControlled")

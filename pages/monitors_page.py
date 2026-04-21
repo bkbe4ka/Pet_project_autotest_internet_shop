@@ -1,5 +1,6 @@
 import time
 
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,6 +8,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 from base.base_class import Base
+from utilities.logger import Logger
 
 
 class Monitor_filter_page(Base):
@@ -112,14 +114,17 @@ class Monitor_filter_page(Base):
     """Methods"""
 
     def get_monitor_page(self):
-        self.get_current_url()
-        time.sleep(5)
-        self.click_radio()
-        time.sleep(3)
-        self.click_original()
-        self.click_hdmi()
-        self.click_game()
-        self.click_mat()
-        self.click_menu()
-        self.click_rating()
-        self.click_product()
+        with allure.step("Get monitor page"):
+            Logger.add_start_step(method="get_monitor_page")
+            self.get_current_url()
+            time.sleep(5)
+            self.click_radio()
+            time.sleep(3)
+            self.click_original()
+            self.click_hdmi()
+            self.click_game()
+            self.click_mat()
+            self.click_menu()
+            self.click_rating()
+            self.click_product()
+            Logger.add_end_step(self.driver.current_url, method="get_monitor_page")

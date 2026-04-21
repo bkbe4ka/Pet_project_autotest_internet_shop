@@ -1,11 +1,13 @@
 import time
 
+import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
 from base.base_class import Base
+from utilities.logger import Logger
 
 
 class Main_page(Base):
@@ -42,9 +44,12 @@ class Main_page(Base):
     """Methods"""
 
     def get_main_page(self):
-        self.driver.get(self.url)
-        self.driver.maximize_window()
-        time.sleep(3)
-        self.get_current_url()
-        self.click_catalog()
-        self.click_monitor()
+        with allure.step("Get main page"):
+            Logger.add_start_step(method="get_main_page")
+            self.driver.get(self.url)
+            self.driver.maximize_window()
+            time.sleep(3)
+            self.get_current_url()
+            self.click_catalog()
+            self.click_monitor()
+            Logger.add_end_step(self.driver.current_url, method="get_main_page")

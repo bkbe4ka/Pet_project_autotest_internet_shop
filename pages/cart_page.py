@@ -1,5 +1,6 @@
 import time
 
+import allure
 from selenium.common import ElementClickInterceptedException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -8,6 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 from base.base_class import Base
+from utilities.logger import Logger
 
 
 class Cart_final_page(Base):
@@ -68,14 +70,17 @@ class Cart_final_page(Base):
     """Methods"""
 
     def get_final_page(self):
-        self.get_current_url()
-        time.sleep(3)
-        self.assert_url('https://www.ozon.ru/cart')
-        self.assert_word("Корзина", self.return_text())
-        self.add_to_favourites()
-        self.delete_product()
-        self.final_delete_product()
-        self.favourite_product()
-        self.assert_url('https://www.ozon.ru/my/favorites')
+        with allure.step("Get final page"):
+            Logger.add_start_step(method="get_final_page")
+            self.get_current_url()
+            time.sleep(3)
+            self.assert_url('https://www.ozon.ru/cart')
+            self.assert_word("Корзина", self.return_text())
+            self.add_to_favourites()
+            self.delete_product()
+            self.final_delete_product()
+            self.favourite_product()
+            self.assert_url('https://www.ozon.ru/my/favorites')
+            Logger.add_end_step(self.driver.current_url, method="get_final_page")
 
 
