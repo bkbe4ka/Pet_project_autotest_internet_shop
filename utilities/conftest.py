@@ -1,8 +1,2 @@
-import pytest
-
-
-@pytest.fixture()
-def set_up():
-    print("Start test")
-    yield
-    print("End test")
+# Фикстуры переехали в КОРНЕВОЙ conftest.py (этот файл в utilities/ был невидим для Tests/).
+# Файл оставлен пустым намеренно.

@@ -1,11 +1,6 @@
 import time
 
 import allure
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-
 
 from base.base_class import Base
 from utilities.logger import Logger
@@ -17,9 +12,8 @@ class Monitor_filter_page(Base):
         super().__init__(driver)
         self.driver = driver
 
-    #Locators
-
-    radio_button = "//div[@class='x1b_7'][5]"
+    # Locators
+    radio_button = "//div[@class='x1b_7'][5]"          # хеш-класс + позиционный индекс -> хрупко
     original_brand = "//span[contains(text(), 'Оригинальный товар')]"
     hdmi_button = "//span[contains(text(), 'HDMI')]"
     game_button = "//span[contains(text(), 'Для игр')]"
@@ -28,88 +22,73 @@ class Monitor_filter_page(Base):
     rating = "//span[contains(text(), 'С высоким рейтингом')]"
     cart = "//a[@href='/cart']"
     product = "//span[contains(text(), 'LOBOTi')]"
-    assert_word = "//div[@class='checkout_m1 checkout_m2']"
 
-
-    #Return button
-
-    def scroll(self):
-        self.driver.execute_script("window.scrollTo(0, 1200);")
-        time.sleep(3)
-
+    # Return button (через self.find + intent)
     def choose_radio(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.radio_button)))
-
+        return self.find(self.radio_button,
+                         intent="радио-выбор раздела мониторов в каталоге", action="navigate")
 
     def get_original(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.original_brand)))
-
+        return self.find(self.original_brand,
+                         intent="фильтр 'Оригинальный товар'", action="navigate")
 
     def get_hdmi(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.hdmi_button)))
-
+        return self.find(self.hdmi_button,
+                         intent="фильтр 'HDMI' в характеристиках монитора", action="navigate")
 
     def get_game(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.game_button)))
+        return self.find(self.game_button,
+                         intent="фильтр 'Для игр'", action="navigate")
 
     def get_mat(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.mat)))
-
+        return self.find(self.mat,
+                         intent="фильтр покрытия экрана 'Матовое'", action="navigate")
 
     def get_menu(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.menu)))
+        return self.find(self.menu,
+                         intent="поле ввода в панели фильтров", action="fill")
 
     def get_rating(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.rating)))
+        return self.find(self.rating,
+                         intent="сортировка 'С высоким рейтингом'", action="navigate")
 
     def get_cart(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.cart)))
+        return self.find(self.cart,
+                         intent="иконка перехода в корзину", action="navigate")
 
     def get_product(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.product)))
+        return self.find(self.product,
+                         intent="карточка товара LOBOTi в выдаче", action="navigate")
 
-
-    #Action
+    # Action — каждый клик: найти -> прокрутить к элементу -> кликнуть
+    def _click(self, getter):
+        el = getter()
+        self.scroll_to(el)
+        el.click()
 
     def click_radio(self):
-        self.driver.execute_script("window.scrollTo(0, 400);")
-        self.choose_radio().click()
-        print("Radio-button click")
+        self._click(self.choose_radio); print("Radio-button click")
 
     def click_original(self):
-        self.scroll()
-        self.get_original().click()
-        print("Original brand click")
+        self._click(self.get_original); print("Original brand click")
 
     def click_hdmi(self):
-        self.scroll()
-        self.get_hdmi().click()
-        print("HDMI click")
+        self._click(self.get_hdmi); print("HDMI click")
 
     def click_game(self):
-        self.scroll()
-        self.get_game().click()
-        print("Game click")
+        self._click(self.get_game); print("Game click")
 
     def click_mat(self):
-        self.scroll()
-        self.get_mat().click()
-        print("Mat click")
+        self._click(self.get_mat); print("Mat click")
 
     def click_menu(self):
-        self.driver.execute_script("window.scrollTo(0, -1200);")
-        self.get_menu().click()
-        print("Menu click")
+        self._click(self.get_menu); print("Menu click")
 
     def click_rating(self):
-        self.get_rating().click()
-        print("High rating click")
+        self._click(self.get_rating); print("High rating click")
 
     def click_product(self):
-        self.driver.execute_script("window.scrollTo(0, 400);")
-        self.get_product().click()
-        print("Product click")
-
+        self._click(self.get_product); print("Product click")
 
     """Methods"""
 
@@ -117,9 +96,8 @@ class Monitor_filter_page(Base):
         with allure.step("Get monitor page"):
             Logger.add_start_step(method="get_monitor_page")
             self.get_current_url()
-            time.sleep(5)
-            self.click_radio()
             time.sleep(3)
+            self.click_radio()
             self.click_original()
             self.click_hdmi()
             self.click_game()

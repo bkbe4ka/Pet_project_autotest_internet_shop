@@ -4,49 +4,71 @@ import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+
+# --- selfheal ---
+from selfheal.config import Config
+from selfheal.selenium_adapter import SeleniumHealEngine
+from selfheal.engine import HealAbstained
 
 
-class Base():
+class Base:
     def __init__(self, driver):
         self.driver = driver
+        # один heal-движок на page-объект; test_id берём из текущего теста
+        test_id = os.environ.get("PYTEST_CURRENT_TEST", "manual").split(" ")[0].replace("::", "__")
+        mode = os.environ.get("SELFHEAL_MODE", "propose")     # propose | inline | off
+        self._heal = SeleniumHealEngine(driver, test_id=test_id, cfg=Config(mode=mode))
 
-    """Get current url"""
+    # ---------- heal-аware поиск ----------
+    def find(self, xpath: str, intent: str, action: str = "click", timeout: float = 30.0):
+        """Найти элемент по XPATH с самовосстановлением.
 
+        intent  — человекочитаемое намерение (питает семантический матч и проверку идентичности).
+        action  — readonly | navigate | fill | submit | destructive (влияет на порог доверия;
+                  на счастливом пути не важен, срабатывает только при восстановлении).
+        Если SELFHEAL_MODE=off — обычный WebDriverWait.
+        """
+        if os.environ.get("SELFHEAL_MODE", "propose") == "off":
+            return WebDriverWait(self.driver, timeout).until(
+                EC.element_to_be_clickable((By.XPATH, xpath)))
+        return self._heal.find(xpath, intent=intent, action=action, timeout=timeout)
+
+    def scroll_to(self, element):
+        """Прокрутить к элементу (вместо хрупких window.scrollTo с пиксельными константами)."""
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});", element)
+
+    # ---------- утилиты ----------
     def get_current_url(self):
-        get_url = self.driver.current_url
-        print("Current url: " + get_url)
-
-    """Get screen"""
+        """Вернуть текущий URL (раньше только печатал, ничего не возвращая)."""
+        url = self.driver.current_url
+        print("Current url: " + url)
+        return url
 
     def get_screenshot(self):
-        self.now_date = datetime.datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
-        self.driver.save_screenshot(f"C:\\Users\\Глеб\\PycharmProjects\\Pet_Project for portfolio\\screen\\screenshot_" + self.now_date + ".png")
-
-    """Assert url"""
+        now = datetime.datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
+        screen_dir = os.path.join(os.getcwd(), "screen")        # относительный путь вместо C:\Users\Глеб\...
+        os.makedirs(screen_dir, exist_ok=True)
+        self.driver.save_screenshot(os.path.join(screen_dir, f"screenshot_{now}.png"))
 
     def assert_url(self, result):
-        get_url = self.driver.current_url
-        assert get_url == result
-        print("Get correct result")
+        """Мягкое сравнение: у Ozon в URL прилетают query-параметры, точное == хрупко."""
+        url = self.driver.current_url
+        assert result in url, f"URL не совпал: ожидали подстроку '{result}', получили '{url}'"
+        print("URL корректен")
 
-    """Assert word"""
-    def assert_word(self, word, xpath_word):
-        try:
-            self.word = word
-            self.xpath_word = xpath_word
-            assert xpath_word == word
-            print("Correct word")
-        except AssertionError:
-            print(f"Word {word} != {xpath_word}")
-
-    """Close cookie"""
+    def assert_word(self, expected, actual):
+        """ИСПРАВЛЕНО: раньше AssertionError проглатывался -> тест не мог упасть."""
+        assert actual == expected, f"Текст не совпал: ожидали '{expected}', получили '{actual}'"
+        print("Текст корректен")
 
     def cookies(self):
+        """Закрыть cookie-баннер (его вёрстка у Ozon часто меняется -> через heal)."""
         try:
-            cookie_accept_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'ОК')]"))
-            )
-            cookie_accept_button.click()
+            self.find("//button[contains(text(),'ОК')]",
+                      intent="кнопка принятия cookie-баннера",
+                      action="navigate", timeout=10).click()
             print("Cookie-баннер закрыт")
-        except:
+        except (HealAbstained, TimeoutException):
             print("Cookie-баннер не появился или уже закрыт")

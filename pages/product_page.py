@@ -1,11 +1,6 @@
 import time
 
 import allure
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
-
 
 from base.base_class import Base
 from utilities.logger import Logger
@@ -17,29 +12,28 @@ class Product_page(Base):
         super().__init__(driver)
         self.driver = driver
 
-    #Locators
-
-    cart = "//a[@data-widget='headerIcon']"
-    button_add_to_cart = "//button[@class='pdp_a1f']"
-
-    #Return button
-
+    # Locators
+    cart = "//a[@data-widget='headerIcon']"            # хороший локатор: data-widget стабилен
+    button_add_to_cart = "//button[@class='pdp_a1f']"  # хеш-класс -> selfheal подстрахует
 
     def get_cart(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.cart)))
+        return self.find(self.cart,
+                         intent="иконка корзины в шапке", action="navigate")
 
     def get_button(self):
-        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.button_add_to_cart)))
+        return self.find(self.button_add_to_cart,
+                         intent="кнопка 'Добавить в корзину' в карточке товара",
+                         action="navigate")
 
     def click_button(self):
-        self.driver.execute_script("window.scrollTo(0, 300);")
-        self.get_button().click()
+        el = self.get_button()
+        self.scroll_to(el)
+        el.click()
         print("Button click")
 
     def click_cart(self):
         self.get_cart().click()
         print("Cart click")
-
 
     """Methods"""
 
@@ -52,5 +46,3 @@ class Product_page(Base):
             self.click_cart()
             self.get_screenshot()
             Logger.add_end_step(self.driver.current_url, method="get_product_page")
-
-
