@@ -39,7 +39,6 @@ class Base:
         self.driver.execute_script(
             "arguments[0].scrollIntoView({block: 'center'});", element)
 
-    # ---------- утилиты ----------
     def get_current_url(self):
         """Вернуть текущий URL (раньше только печатал, ничего не возвращая)."""
         url = self.driver.current_url
@@ -48,23 +47,20 @@ class Base:
 
     def get_screenshot(self):
         now = datetime.datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
-        screen_dir = os.path.join(os.getcwd(), "screen")        # относительный путь вместо C:\Users\Глеб\...
+        screen_dir = os.path.join(os.getcwd(), "screen")
         os.makedirs(screen_dir, exist_ok=True)
         self.driver.save_screenshot(os.path.join(screen_dir, f"screenshot_{now}.png"))
 
     def assert_url(self, result):
-        """Мягкое сравнение: у Ozon в URL прилетают query-параметры, точное == хрупко."""
         url = self.driver.current_url
         assert result in url, f"URL не совпал: ожидали подстроку '{result}', получили '{url}'"
         print("URL корректен")
 
     def assert_word(self, expected, actual):
-        """ИСПРАВЛЕНО: раньше AssertionError проглатывался -> тест не мог упасть."""
         assert actual == expected, f"Текст не совпал: ожидали '{expected}', получили '{actual}'"
         print("Текст корректен")
 
     def cookies(self):
-        """Закрыть cookie-баннер (его вёрстка у Ozon часто меняется -> через heal)."""
         try:
             self.find("//button[contains(text(),'ОК')]",
                       intent="кнопка принятия cookie-баннера",

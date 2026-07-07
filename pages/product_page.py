@@ -13,8 +13,8 @@ class Product_page(Base):
         self.driver = driver
 
     # Locators
-    cart = "//a[@data-widget='headerIcon']"            # хороший локатор: data-widget стабилен
-    button_add_to_cart = "//button[@class='pdp_a1f']"  # хеш-класс -> selfheal подстрахует
+    cart = "//a[@data-widget='headerIcon']"
+    button_add_to_cart = "//button[@class='pdp_a1f']"
 
     def get_cart(self):
         return self.find(self.cart,

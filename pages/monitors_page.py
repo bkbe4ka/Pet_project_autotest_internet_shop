@@ -13,7 +13,7 @@ class Monitor_filter_page(Base):
         self.driver = driver
 
     # Locators
-    radio_button = "//div[@class='x1b_7'][5]"          # хеш-класс + позиционный индекс -> хрупко
+    radio_button = "//div[@class='x1b_7'][5]"
     original_brand = "//span[contains(text(), 'Оригинальный товар')]"
     hdmi_button = "//span[contains(text(), 'HDMI')]"
     game_button = "//span[contains(text(), 'Для игр')]"
@@ -60,7 +60,7 @@ class Monitor_filter_page(Base):
         return self.find(self.product,
                          intent="карточка товара LOBOTi в выдаче", action="navigate")
 
-    # Action — каждый клик: найти -> прокрутить к элементу -> кликнуть
+
     def _click(self, getter):
         el = getter()
         self.scroll_to(el)

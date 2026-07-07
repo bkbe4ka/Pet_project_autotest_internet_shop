@@ -11,11 +11,9 @@ from pages.product_page import Product_page
 
 @allure.description("Test select product")
 def test_select_product(driver):
-    # driver приходит из фикстуры (conftest.py) и закрывается в teardown — quit() больше не забыт
     mp = Main_page(driver)
     mp.get_main_page()
 
-    # переход на новую вкладку — устойчиво, без жёсткого window_handles[1]
     switch_to_new_tab(driver)
     monitors_page = Monitor_filter_page(driver)
     monitors_page.get_monitor_page()
@@ -28,6 +26,6 @@ def test_select_product(driver):
     cp = Cart_final_page(driver)
     cp.get_final_page()
 
-    # хотя бы одна осмысленная проверка результата сценария
+
     assert "favorites" in driver.current_url, \
         f"Ожидали переход в избранное, текущий URL: {driver.current_url}"

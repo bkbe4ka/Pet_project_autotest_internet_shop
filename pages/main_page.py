@@ -15,7 +15,7 @@ class Main_page(Base):
         self.driver = driver
 
     # Locators
-    burger_button = "//button[@class='b25_8_1-a4 b25_8_1-b6']"   # хеш-классы Ozon -> selfheal подстрахует
+    burger_button = "//button[@class='b25_8_1-a4 b25_8_1-b6']"
     monitors = "//a[@href='/category/monitory-15738/']"
 
     # Return button (через self.find + intent)

@@ -1,13 +1,4 @@
-"""Калибровка уверенности.
 
-Сырая слитая оценка != вероятность правильности. Мы калибруем её против ИСТИНЫ,
-которую получаем бесплатно: каждое восстановление в итоге верифицируется (проверка эффекта)
-или ревьюится человеком. Логируем (raw_score, success_bool) и подгоняем монотонное
-отображение raw -> p(верно).
-
-Используем изотоническую регрессию (алгоритм Pool Adjacent Violators) на чистом Python —
-без обязательных зависимостей. Пока данных мало, мягко откатываемся к identity.
-"""
 from __future__ import annotations
 
 import bisect
@@ -33,7 +24,6 @@ def _pav(xs: list[float], ys: list[float]) -> tuple[list[float], list[float]]:
     gy = [s / c for _, (s, c) in uniq]
     gw = [c for _, (_, c) in uniq]
 
-    # 2. PAV: сливаем убывающие нарушения (с весами)
     sx: list[float] = []
     sy: list[float] = []
     sw: list[float] = []
@@ -45,15 +35,15 @@ def _pav(xs: list[float], ys: list[float]) -> tuple[list[float], list[float]]:
             mw = w1 + w2
             sy.append((y1 * w1 + y2 * w2) / mw)
             sw.append(mw)
-            sx.append(x2)            # блок представлен правой границей x
+            sx.append(x2)
     return sx, sy
 
 
 @dataclass
 class Calibrator:
     min_samples: int = 30
-    _xs: list[float] = field(default_factory=list)   # границы блоков (возрастают)
-    _ys: list[float] = field(default_factory=list)   # калиброванные вероятности
+    _xs: list[float] = field(default_factory=list)
+    _ys: list[float] = field(default_factory=list)
     _n: int = 0
     fitted: bool = False
 

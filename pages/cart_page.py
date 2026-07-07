@@ -21,7 +21,6 @@ class Cart_final_page(Base):
     my_favourite = "//a[@href='/my/favorites']"
     favourite_word = "//div[contains(text(), 'Избранное')]"
 
-    # Чтение текста: action='readonly' (низкий порог, не клик)
     def return_text(self):
         return self.find(self.cart, intent="заголовок корзины", action="readonly").text
 
@@ -29,7 +28,6 @@ class Cart_final_page(Base):
         return self.find(self.favourites,
                          intent="кнопка 'В избранное' у товара в корзине", action="navigate")
 
-    # Удаление — РАЗРУШАЮЩЕЕ действие: selfheal НИКОГДА не чинит его авто, только предложит
     def get_delete_button(self):
         return self.find(self.delete,
                          intent="кнопка удаления товара из корзины", action="destructive")
@@ -42,7 +40,6 @@ class Cart_final_page(Base):
         return self.find(self.my_favourite,
                          intent="ссылка перехода в раздел 'Избранное'", action="navigate")
 
-    # ИСПРАВЛЕНО: раньше тут по ошибке возвращался локатор my_favourite (копипаста)
     def get_favourite_word(self):
         return self.find(self.favourite_word,
                          intent="заголовок раздела 'Избранное'", action="readonly")
